@@ -1,0 +1,40 @@
+version: 0.0.{build}
+skip_branch_with_pr: true
+image: Visual Studio 2017
+matrix:
+  fast_finish: true
+environment:
+  PSGalleryApiKey:
+    secure: X23r0Rpvuuv9YYJ9JGJVkAQ7SDHPslytk5uJxuNhF7dnNIAB8h6uIike18k/Icsz  
+  DownloadBase:
+    secure: tvDdT2DZMOgijvJd0Pvmuic+soMCi6cNrh+ndejvp0gb6vCTKWp3tbXNmoUi5kjzpdTZetFLWNKDuim/FJ0aVw==
+  matrix:
+  - Topology: 910XM0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: https://appveyor.dev.local
+  - Topology: 910XM1
+    SiteFolder: C:\inetpub\wwwroot\appveyor.cm.local
+    SiteUrl: https://appveyor.cm.local
+  - Topology: 910XP0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: http://appveyor.dev.local
+  - Topology: 910XP1
+    SiteFolder: C:\inetpub\wwwroot\appveyor.cm.local
+    SiteUrl: https://appveyor.cm.local
+  - Topology: 902XP0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: http://appveyor.dev.local    
+services:
+- iis
+- mssql2017
+build_script:
+- ps: >-
+    .\test.ps1 -Topology $Env:Topology `
+               -Prefix appveyor `
+               -SiteFolder $Env:SiteFolder `
+               -SiteUrl $Env:SiteUrl `
+               -DownloadBase $Env:DownloadBase `
+               -DownloadFolder C:\Downloads `
+               -SqlAdminPassword 'Password12!'
+deploy_script:
+- ps: .\deploy.ps1

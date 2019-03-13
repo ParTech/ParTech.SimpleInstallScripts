@@ -106,6 +106,8 @@ Function Install-Sitecore902XP0 (
         Install-SitecoreConfiguration @params
     } Finally {
         Pop-Location
+
+        # Put the latest version of SIF back
         Remove-Module SitecoreInstallFramework
         Install-SitecoreInstallationFramework        
     }

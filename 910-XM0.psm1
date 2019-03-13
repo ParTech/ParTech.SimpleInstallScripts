@@ -69,9 +69,9 @@ Function Install-Sitecore910XM0 (
 
     Try {
         If ($DoUninstall) {
-            Uninstall-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM1-SingleDeveloper-Uninstall.log
+            Uninstall-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM0-SingleDeveloper-Uninstall.log
         } else {
-            Install-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM1-SingleDeveloper.log
+            Install-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM0-SingleDeveloper.log
         }
     } Finally {
         Pop-Location

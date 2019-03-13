@@ -77,5 +77,5 @@ Function Install-Sitecore910XM0 (
         Pop-Location
     }
 
-    Install-SitecoreConfiguration .\SetRole.json -SiteName $SitecoreContentManagementSitename -Role Standalone
+    Install-SitecoreConfiguration "$PSScriptRoot\SetRole.json" -SiteName $SitecoreContentManagementSitename -Role Standalone
 }

@@ -1,5 +1,8 @@
-if ($env:APPVEYOR_JOB_NUMBER -ne 5) { return }
+if ($env:APPVEYOR -eq "True" -and $env:APPVEYOR_REPO_BRANCH -ne "master") { return }
+#if ($env:APPVEYOR_JOB_NUMBER -ne 5) { return }
 
+Write-Host $env:APPVEYOR_JOB_NAME
+return
 Remove-Item -Recurse ParTech.SimpleInstallScripts -ErrorAction SilentlyContinue
 New-Item ParTech.SimpleInstallScripts -ItemType "directory"
 

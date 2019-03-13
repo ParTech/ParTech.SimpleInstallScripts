@@ -20,8 +20,8 @@ Function Install-Sitecore902XP0 (
     [string] $PasswordRecoveryUrl = "http://$SitecoreSiteName", # The Identity Server password recovery URL, this should be the URL of the CM Instance
     [string] $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
     [string] $DownloadBase = $Env:DownloadBase,
-    [switch] $DoInstallPrerequisites = $false, # Do not install SIF, Solr, etc.
-    [string] $SifVersion = "1.2.1" #Version of SIF that should be installed and/or used
+    [switch] $DoInstallPrerequisites, # Install SIF, Solr, etc.
+    [string] $SifVersion = "1.2.1" # Version of SIF that should be installed and/or used
 )
 {
     Invoke-DownloadPackages $DownloadBase `

@@ -23,8 +23,8 @@ Function Install-Sitecore910XP0 (
     [string] $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
     [string] $AllowedCorsOrigins = "http://$SitecoreSiteName", # Pipe-separated list of instances (URIs) that are allowed to login via Sitecore Identity.
     [string] $DownloadBase = $Env:DownloadBase,
-    [switch] $DoUninstall = $false, # Uninstalls Sitecore instead of installing
-    [switch] $DoInstallPrerequisites = $false # Do not install SIF, Solr, etc.
+    [switch] $DoUninstall, # Uninstalls Sitecore instead of installing
+    [switch] $DoInstallPrerequisites # Install SIF, Solr, etc.
 )
 {
     Invoke-DownloadPackages $DownloadBase `

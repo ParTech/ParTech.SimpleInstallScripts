@@ -1,4 +1,4 @@
-if ($env:APPVEYOR -eq "True" -and $env:APPVEYOR_REPO_BRANCH -ne "master") { return }
+if ($env:APPVEYOR_REPO_BRANCH -ne "master") { return }
 #if ($env:APPVEYOR_JOB_NUMBER -ne 5) { return }
 
 Write-Host $env:APPVEYOR_JOB_NAME

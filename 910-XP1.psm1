@@ -1,48 +1,48 @@
 Set-StrictMode -Version 2.0
 
 Function Install-Sitecore910XP1 (
-    [Parameter(Mandatory=$true)]  [string]   $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
-    [Parameter(Mandatory=$false)] [string]   $SitecoreAdminPassword = "b", # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
-    [Parameter(Mandatory=$false)] [string]   $SCInstallRoot = "C:\Downloads\9.1.0", # The root folder with the license file and WDP files.
-    [Parameter(Mandatory=$false)] [string]   $ContentDeliverySiteName = "$prefix.cd.local", # The name for the Content Delivery site.
-    [Parameter(Mandatory=$false)] [string]   $ContentManagementSiteName = "$prefix.cm.local", # The name for the Content Management site.
-    [Parameter(Mandatory=$false)] [string]   $ReportingSiteName = "$prefix.rep.local", # The name for the Reporting site.
-    [Parameter(Mandatory=$false)] [string]   $ProcessingSiteName = "$prefix.prc.local", # The name for the Processing site.
-    [Parameter(Mandatory=$false)] [string]   $ReferenceDateSiteName = "$prefix.refdata.local", # The name for the Reference Data site.
-    [Parameter(Mandatory=$false)] [string]   $IdentityServerSiteName = "$Prefix.identityserver.local", # Identity Server site name
-    [Parameter(Mandatory=$false)] [string]   $XP1MarketingAutomationSiteName = "$Prefix.ma.local", # The name for the Marketing Automation site.
-    [Parameter(Mandatory=$false)] [string]   $XP1MarketingAutomationReportingSiteName = "$prefix.mareporting.local", # The name for the Marketing Automation reporting site.
-    [Parameter(Mandatory=$false)] [string]   $XP1ClientCertificateName = "$prefix.xconnect_client", # The name for the XConnect site url.
-    [Parameter(Mandatory=$false)] [string]   $XP1CollectionSitename = "$prefix.collection.local", # The name for the XConnect collection site.
-    [Parameter(Mandatory=$false)] [string]   $XP1CollectionSearchSitename = "$prefix.search.local", # The name for the search site.
-    [Parameter(Mandatory=$false)] [string]   $XP1CortexProcessingSitename = "$prefix.processingEngine.local", # The name for the XConnect processing engine service.
-    [Parameter(Mandatory=$false)] [string]   $XP1CortexReportingSitename = "$prefix.reporting.local", # The name for the XConnect reporting service.
-    [Parameter(Mandatory=$false)] [string]   $XConnectCollectionSearchService = "https://$XP1CollectionSearchSitename", # The URL for the XConnect Search Service.
-    [Parameter(Mandatory=$false)] [string]   $XConnectCollectionService = "https://$XP1CollectionSitename", # The URL for the XConnect Collection Service.
-    [Parameter(Mandatory=$false)] [string]   $XConnectReferenceDataService = "https://$ReferenceDateSiteName", # The URL of the XConnect Reference Data service
-    [Parameter(Mandatory=$false)] [string]   $ProcessingService = "https://$ProcessingSiteName", # The URL of the processing service
-    [Parameter(Mandatory=$false)] [string]   $ReportingService = "https://$ReportingSiteName", # The URL of the reporting service
-    [Parameter(Mandatory=$false)] [string]   $CortexReportingService = "https://$XP1CortexReportingSitename", # The URL of the Cortex Reporting Service
-    [Parameter(Mandatory=$false)] [string]   $MarketingAutomationOperationsService = "https://$XP1MarketingAutomationSiteName", # The URL of the Marketing Automaton Service
-    [Parameter(Mandatory=$false)] [string]   $MarketingAutomationReportingService = "https://$XP1MarketingAutomationReportingSiteName", # The URL of the Marteting Automation Reporting Service
-    [Parameter(Mandatory=$false)] [string]   $MachineLearningServerUrl = "http://admin:Test123!@QA-MMLS-01-DK1.dk.sitecore.net:12800", # The URL of the Machine Learning server
-    [Parameter(Mandatory=$false)] [string]   $LicenseFile = "$SCInstallRoot\license.xml", # The Path to the license file
-    [Parameter(Mandatory=$false)] [string]   $SolrHost = "solr", # The hostname of the Solr server
-    [Parameter(Mandatory=$false)] [string]   $SolrPort = "8983", # The port of the Solr server
-    [Parameter(Mandatory=$false)] [string]   $SolrUrl = "https://$($SolrHost):$($SolrPort)/solr", # The Url of the Solr service
-    [Parameter(Mandatory=$false)] [string]   $SolrVersion = "7.2.1", # Solr version
-    [Parameter(Mandatory=$false)] [string]   $SolrService = "Solr-$SolrVersion", # The Name of the Solr Service.
-    [Parameter(Mandatory=$false)] [string]   $SolrRoot = "C:\solr\$SolrService", # The Folder that Solr has been installed in
-    [Parameter(Mandatory=$false)] [string]   $SqlServer = ".", # The DNS name or IP of the SQL Instance.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminPassword = "12345", # The password for $SQLAdminUser.
-    [Parameter(Mandatory=$false)] [string]   $PasswordRecoveryUrl = "https://$ContentManagementSiteName", # The Identity Server password recovery URL, this should be the URL of the CM Instance
-    [Parameter(Mandatory=$false)] [string]   $SitecoreIdentityAuthority = "https://$IdentityServerSiteName", # The URL of the Identity Authority
-    [Parameter(Mandatory=$false)] [string]   $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
-    [Parameter(Mandatory=$false)] [string]   $AllowedCorsOrigins = "https://$ContentManagementSiteName", # Pipe-separated list of instances (URIs) that are allowed to login via Sitecore Identity.
-    [Parameter(Mandatory=$false)] [string]   $DownloadBase = $Env:DownloadBase,
-    [Parameter(Mandatory=$false)] [switch]   $DoUninstall = $false, # Uninstalls Sitecore instead of installing
-    [Parameter(Mandatory=$false)] [switch]   $DoInstallPrerequisites = $false # Do not install SIF, Solr, etc.
+    [string] [Parameter(Mandatory)] [string] $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
+    [string] $SitecoreAdminPassword = "b", # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
+    [string] $SCInstallRoot = "C:\Downloads\9.1.0", # The root folder with the license file and WDP files.
+    [string] $ContentDeliverySiteName = "$prefix.cd.local", # The name for the Content Delivery site.
+    [string] $ContentManagementSiteName = "$prefix.cm.local", # The name for the Content Management site.
+    [string] $ReportingSiteName = "$prefix.rep.local", # The name for the Reporting site.
+    [string] $ProcessingSiteName = "$prefix.prc.local", # The name for the Processing site.
+    [string] $ReferenceDateSiteName = "$prefix.refdata.local", # The name for the Reference Data site.
+    [string] $IdentityServerSiteName = "$Prefix.identityserver.local", # Identity Server site name
+    [string] $XP1MarketingAutomationSiteName = "$Prefix.ma.local", # The name for the Marketing Automation site.
+    [string] $XP1MarketingAutomationReportingSiteName = "$prefix.mareporting.local", # The name for the Marketing Automation reporting site.
+    [string] $XP1ClientCertificateName = "$prefix.xconnect_client", # The name for the XConnect site url.
+    [string] $XP1CollectionSitename = "$prefix.collection.local", # The name for the XConnect collection site.
+    [string] $XP1CollectionSearchSitename = "$prefix.search.local", # The name for the search site.
+    [string] $XP1CortexProcessingSitename = "$prefix.processingEngine.local", # The name for the XConnect processing engine service.
+    [string] $XP1CortexReportingSitename = "$prefix.reporting.local", # The name for the XConnect reporting service.
+    [string] $XConnectCollectionSearchService = "https://$XP1CollectionSearchSitename", # The URL for the XConnect Search Service.
+    [string] $XConnectCollectionService = "https://$XP1CollectionSitename", # The URL for the XConnect Collection Service.
+    [string] $XConnectReferenceDataService = "https://$ReferenceDateSiteName", # The URL of the XConnect Reference Data service
+    [string] $ProcessingService = "https://$ProcessingSiteName", # The URL of the processing service
+    [string] $ReportingService = "https://$ReportingSiteName", # The URL of the reporting service
+    [string] $CortexReportingService = "https://$XP1CortexReportingSitename", # The URL of the Cortex Reporting Service
+    [string] $MarketingAutomationOperationsService = "https://$XP1MarketingAutomationSiteName", # The URL of the Marketing Automaton Service
+    [string] $MarketingAutomationReportingService = "https://$XP1MarketingAutomationReportingSiteName", # The URL of the Marteting Automation Reporting Service
+    [string] $MachineLearningServerUrl = "http://admin:Test123!@QA-MMLS-01-DK1.dk.sitecore.net:12800", # The URL of the Machine Learning server
+    [string] $LicenseFile = "$SCInstallRoot\license.xml", # The Path to the license file
+    [string] $SolrHost = "solr", # The hostname of the Solr server
+    [string] $SolrPort = "8983", # The port of the Solr server
+    [string] $SolrUrl = "https://$($SolrHost):$($SolrPort)/solr", # The Url of the Solr service
+    [string] $SolrVersion = "7.2.1", # Solr version
+    [string] $SolrService = "Solr-$SolrVersion", # The Name of the Solr Service.
+    [string] $SolrRoot = "C:\solr\$SolrService", # The Folder that Solr has been installed in
+    [string] $SqlServer = ".", # The DNS name or IP of the SQL Instance.
+    [string] $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
+    [string] $SqlAdminPassword = "12345", # The password for $SQLAdminUser.
+    [string] $PasswordRecoveryUrl = "https://$ContentManagementSiteName", # The Identity Server password recovery URL, this should be the URL of the CM Instance
+    [string] $SitecoreIdentityAuthority = "https://$IdentityServerSiteName", # The URL of the Identity Authority
+    [string] $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
+    [string] $AllowedCorsOrigins = "https://$ContentManagementSiteName", # Pipe-separated list of instances (URIs) that are allowed to login via Sitecore Identity.
+    [string] $DownloadBase = $Env:DownloadBase,
+    [switch] $DoUninstall = $false, # Uninstalls Sitecore instead of installing
+    [switch] $DoInstallPrerequisites = $false # Do not install SIF, Solr, etc.
 )
 {
     Invoke-DownloadPackages $DownloadBase `

@@ -1,11 +1,11 @@
 param(
-    [Parameter(Mandatory=$true)] [string] $Topology,
-    [Parameter(Mandatory=$true)] [string] $Prefix,
-    [Parameter(Mandatory=$true)] [string] $SiteFolder,
-    [Parameter(Mandatory=$true)] [string] $SiteUrl,
-    [Parameter(Mandatory=$true)] [string] $DownloadBase,
-    [Parameter(Mandatory=$true)] [string] $DownloadFolder,
-    [Parameter(Mandatory=$true)] [string] $SqlAdminPassword
+    [Parameter(Mandatory)] [string] $Topology,
+    [Parameter(Mandatory)] [string] $Prefix,
+    [Parameter(Mandatory)] [string] $SiteFolder,
+    [Parameter(Mandatory)] [string] $SiteUrl,
+    [Parameter(Mandatory)] [string] $DownloadBase,
+    [Parameter(Mandatory)] [string] $DownloadFolder,
+    [Parameter(Mandatory)] [string] $SqlAdminPassword
 )
 
 Write-Host "Commit message: $($Env:APPVEYOR_REPO_COMMIT_MESSAGE)"

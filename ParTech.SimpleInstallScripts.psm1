@@ -18,7 +18,7 @@ Function Register-SitecoreGallery() {
 }
 
 Function Install-SitecoreInstallationFramework(
-    [Parameter(Mandatory=$false)] [string] $Version
+    [string] $Version
 ) {
     if ($null -eq $Version) {
         [array] $sifModules = Find-Module -Name "SitecoreInstallFramework" -Repository "SitecoreGallery"
@@ -35,7 +35,7 @@ Function Enable-ModernSecurityProtocols() {
 }
 
 Function Install-SifPrerequisites(
-    [Parameter(Mandatory=$true)] [string] $SCInstallRoot
+    [Parameter(Mandatory)] [string] $SCInstallRoot
 ) {
     Write-Host "================= Installing Prerequisites =================" -foregroundcolor "green"
     $config = Resolve-Path "$SCInstallRoot\Prerequisites.json"
@@ -43,11 +43,11 @@ Function Install-SifPrerequisites(
 }
 
 Function Install-Solr(
-    [Parameter(Mandatory=$true)] [string] $SCInstallRoot,
-    [Parameter(Mandatory=$true)] [string] $NSSMDownloadBase,
-    [Parameter(Mandatory=$true)] [string] $SolrVersion,
-    [Parameter(Mandatory=$true)] [string] $SolrHost,
-    [Parameter(Mandatory=$true)] [string] $SolrPort
+    [Parameter(Mandatory)] [string] $SCInstallRoot,
+    [Parameter(Mandatory)] [string] $NSSMDownloadBase,
+    [Parameter(Mandatory)] [string] $SolrVersion,
+    [Parameter(Mandatory)] [string] $SolrHost,
+    [Parameter(Mandatory)] [string] $SolrPort
 ) {
     Write-Host "================= Installing Solr Server =================" -foregroundcolor "green"
     
@@ -56,12 +56,12 @@ Function Install-Solr(
 }
 
 Function Install-AllPrerequisites(
-    [Parameter(Mandatory=$true)] [string] $SCInstallRoot,
-    [Parameter(Mandatory=$true)] [string] $DownloadBase,
-    [Parameter(Mandatory=$true)] [string] $SolrVersion,
-    [Parameter(Mandatory=$true)] [string] $SolrHost,
-    [Parameter(Mandatory=$true)] [string] $SolrPort,
-    [Parameter(Mandatory=$false)][string] $SifVersion    
+    [Parameter(Mandatory)] [string] $SCInstallRoot,
+    [Parameter(Mandatory)] [string] $DownloadBase,
+    [Parameter(Mandatory)] [string] $SolrVersion,
+    [Parameter(Mandatory)] [string] $SolrHost,
+    [Parameter(Mandatory)] [string] $SolrPort,
+    [string] $SifVersion    
 ) {
     $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -75,10 +75,10 @@ Function Install-AllPrerequisites(
 }
 
 Function Invoke-DownloadPackages (
-    [Parameter(Mandatory=$true)] [string] $DownloadBase,
-    [Parameter(Mandatory=$true)] [string] $SCInstallRoot,
-    [Parameter(Mandatory=$true)] [string] $PackagesName,
-    [Parameter(Mandatory=$true)] [string] $ConfigFilesName
+    [Parameter(Mandatory)] [string] $DownloadBase,
+    [Parameter(Mandatory)] [string] $SCInstallRoot,
+    [Parameter(Mandatory)] [string] $PackagesName,
+    [Parameter(Mandatory)] [string] $ConfigFilesName
 ) {
     Write-Output "Downloading packages..."
     New-Item -ItemType Directory -Force -Path $SCInstallRoot
@@ -96,9 +96,9 @@ Function Invoke-DownloadPackages (
 
 Function Enable-ContainedDatabaseAuthentication
 (
-    [Parameter(Mandatory=$false)] [string]   $SqlServer = ".", # The DNS name or IP of the SQL Instance.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminPassword = "12345" # The password for $SQLAdminUser.
+    [string] $SqlServer = ".", # The DNS name or IP of the SQL Instance.
+    [string] $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
+    [string] $SqlAdminPassword = "12345" # The password for $SQLAdminUser.
 )
 {
     sqlcmd -S $SqlServer -U $SqlAdminUser -P $SqlAdminPassword -h-1 -Q "sp_configure 'contained database authentication', 1; RECONFIGURE;"
@@ -106,8 +106,8 @@ Function Enable-ContainedDatabaseAuthentication
 
 Function Invoke-DownloadIfNeeded
 (
-    [Parameter(Mandatory=$true)][string]$source,
-    [Parameter(Mandatory=$true)][string]$target
+    [Parameter(Mandatory)][string]$source,
+    [Parameter(Mandatory)][string]$target
 )
 {
     Write-Host "Invoke-DownloadIfNeeded to $target"

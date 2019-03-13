@@ -36,5 +36,8 @@ build_script:
                -DownloadBase $Env:DownloadBase `
                -DownloadFolder C:\Downloads `
                -SqlAdminPassword 'Password12!'
+deploy:
+  on:
+    branch: master
 deploy_script:
 - ps: .\deploy.ps1

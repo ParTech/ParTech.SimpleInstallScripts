@@ -46,16 +46,16 @@ function Invoke-EnsureNSSMTask
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$downloadFolder,
 
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$nssmVersion,
 
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$nssmSourcePackage,
         
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$installFolder
     )
 
@@ -77,16 +77,16 @@ function Invoke-EnsureSolrTask
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$downloadFolder,
 
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$solrVersion,
 
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$solrSourcePackage,
         
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$installFolder
     )
 
@@ -108,11 +108,11 @@ function Invoke-ConfigureSolrTask
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$solrHost,
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$solrRoot,
-        [parameter(Mandatory=$true)]
+        [Parameter(Mandatory)]
         [string]$certificateStore
     )
 
@@ -151,11 +151,11 @@ function Invoke-EnsureSolrServiceTask
 {
     [CmdletBinding(SupportsShouldProcess=$true)]
     param(
-        [parameter(Mandatory=$true)] [string]$solrName,
-        [parameter(Mandatory=$true)] [string]$installFolder,
-        [parameter(Mandatory=$true)] [string]$nssmVersion,
-        [parameter(Mandatory=$true)] [string]$solrRoot,
-        [parameter(Mandatory=$true)] [string]$solrPort
+        [Parameter(Mandatory)] [string]$solrName,
+        [Parameter(Mandatory)] [string]$installFolder,
+        [Parameter(Mandatory)] [string]$nssmVersion,
+        [Parameter(Mandatory)] [string]$solrRoot,
+        [Parameter(Mandatory)] [string]$solrPort
     )
 
     PROCESS

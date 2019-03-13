@@ -2,7 +2,7 @@ Set-StrictMode -Version 2.0
 
 Function Install-SitecorePackageInstallerTask {
     param(
-        [Parameter(Mandatory=$true)] [string] $SiteFolder
+        [Parameter(Mandatory)] [string] $SiteFolder
     )
 
     Write-Information "Installing Sitecore Package Installer" -Tag 'PackageInstall'
@@ -13,7 +13,7 @@ Function Install-SitecorePackageInstallerTask {
 
 Function Remove-SitecorePackageInstallerTask {
     param(
-        [Parameter(Mandatory=$true)] [string] $SiteFolder
+        [Parameter(Mandatory)] [string] $SiteFolder
     )
 
     Write-Information "Deleting Sitecore Package Installer" -Tag 'PackageInstall'
@@ -23,8 +23,8 @@ Function Remove-SitecorePackageInstallerTask {
 
 Function Install-SitecorePackageTask {
     param(
-        [Parameter(Mandatory=$true)] [string] $SiteUrl,
-        [Parameter(Mandatory=$true)] [string] $PackagePath
+        [Parameter(Mandatory)] [string] $SiteUrl,
+        [Parameter(Mandatory)] [string] $PackagePath
     )
 
     Write-Information "Installing Package $PackagePath" -Tag 'PackageInstall'

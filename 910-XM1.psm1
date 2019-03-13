@@ -1,29 +1,29 @@
 Set-StrictMode -Version 2.0
 
 Function Install-Sitecore910XM1 (
-    [Parameter(Mandatory=$true)] [string]    $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
-    [Parameter(Mandatory=$false)] [string]   $SitecoreAdminPassword = "b", # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
-    [Parameter(Mandatory=$false)] [string]   $SCInstallRoot = "C:\Downloads\9.1.0", # The root folder with the license file and WDP files.
-    [Parameter(Mandatory=$false)] [string]   $SitecoreContentManagementSitename = "$Prefix.cm.local", # The name for the Sitecore Content Management server.
-    [Parameter(Mandatory=$false)] [string]   $SitecoreContentDeliverySitename = "$Prefix.cd.local", # The name for the Sitecore Content Delivery server.
-    [Parameter(Mandatory=$false)] [string]   $IdentityServerSiteName = "$Prefix.identityserver.local", # Identity Server site name
-    [Parameter(Mandatory=$false)] [string]   $LicenseFile = "$SCInstallRoot\license.xml", # The Path to the license file
-    [Parameter(Mandatory=$false)] [string]   $SolrHost = "solr", # The hostname of the Solr server
-    [Parameter(Mandatory=$false)] [string]   $SolrPort = "8983", # The port of the Solr server
-    [Parameter(Mandatory=$false)] [string]   $SolrUrl = "https://$($SolrHost):$($SolrPort)/solr", # The Url of the Solr service
-    [Parameter(Mandatory=$false)] [string]   $SolrVersion = "7.2.1", # Solr version
-    [Parameter(Mandatory=$false)] [string]   $SolrService = "Solr-$SolrVersion", # The Name of the Solr Service.
-    [Parameter(Mandatory=$false)] [string]   $SolrRoot = "C:\solr\$SolrService", # The Folder that Solr has been installed in
-    [Parameter(Mandatory=$false)] [string]   $SqlServer = ".", # The DNS name or IP of the SQL Instance.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
-    [Parameter(Mandatory=$false)] [string]   $SqlAdminPassword = "12345", # The password for $SQLAdminUser.
-    [Parameter(Mandatory=$false)] [string]   $PasswordRecoveryUrl = "http://$SitecoreContentManagementSitename", # The Identity Server password recovery URL, this should be the URL of the CM Instance
-    [Parameter(Mandatory=$false)] [string]   $SitecoreIdentityAuthority = "https://$IdentityServerSiteName", # The URL of the Identity Authority
-    [Parameter(Mandatory=$false)] [string]   $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
-    [Parameter(Mandatory=$false)] [string]   $AllowedCorsOrigins = "https://$SitecoreContentManagementSitename", # Pipe-separated list of instances (URIs) that are allowed to login via Sitecore Identity.
-    [Parameter(Mandatory=$false)] [string]   $DownloadBase = $Env:DownloadBase,
-    [Parameter(Mandatory=$false)] [switch]   $DoUninstall = $false, # Uninstalls Sitecore instead of installing
-    [Parameter(Mandatory=$false)] [switch]   $DoInstallPrerequisites = $false # Install SIF, Solr, etc.
+    [Parameter(Mandatory)] [string] $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
+    [string] $SitecoreAdminPassword = "b", # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
+    [string] $SCInstallRoot = "C:\Downloads\9.1.0", # The root folder with the license file and WDP files.
+    [string] $SitecoreContentManagementSitename = "$Prefix.cm.local", # The name for the Sitecore Content Management server.
+    [string] $SitecoreContentDeliverySitename = "$Prefix.cd.local", # The name for the Sitecore Content Delivery server.
+    [string] $IdentityServerSiteName = "$Prefix.identityserver.local", # Identity Server site name
+    [string] $LicenseFile = "$SCInstallRoot\license.xml", # The Path to the license file
+    [string] $SolrHost = "solr", # The hostname of the Solr server
+    [string] $SolrPort = "8983", # The port of the Solr server
+    [string] $SolrUrl = "https://$($SolrHost):$($SolrPort)/solr", # The Url of the Solr service
+    [string] $SolrVersion = "7.2.1", # Solr version
+    [string] $SolrService = "Solr-$SolrVersion", # The Name of the Solr Service.
+    [string] $SolrRoot = "C:\solr\$SolrService", # The Folder that Solr has been installed in
+    [string] $SqlServer = ".", # The DNS name or IP of the SQL Instance.
+    [string] $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
+    [string] $SqlAdminPassword = "12345", # The password for $SQLAdminUser.
+    [string] $PasswordRecoveryUrl = "http://$SitecoreContentManagementSitename", # The Identity Server password recovery URL, this should be the URL of the CM Instance
+    [string] $SitecoreIdentityAuthority = "https://$IdentityServerSiteName", # The URL of the Identity Authority
+    [string] $ClientSecret = "SIF-Default", # The random string key used for establishing connection with IdentityService. This will be regenerated if left on the default.
+    [string] $AllowedCorsOrigins = "https://$SitecoreContentManagementSitename", # Pipe-separated list of instances (URIs) that are allowed to login via Sitecore Identity.
+    [string] $DownloadBase = $Env:DownloadBase,
+    [switch] $DoUninstall, # Uninstalls Sitecore instead of installing
+    [switch] $DoInstallPrerequisites # Install SIF, Solr, etc.
 )
 {
     Invoke-DownloadPackages $DownloadBase `

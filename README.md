@@ -2,6 +2,8 @@
 
 This module installs Sitecore 9 and its prerequisites on [AppVeyor](https://www.appveyor.com), or any other *standalone* development workstation. This is not suitable for production.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/jqfrchxsv6dpvtx5/branch/master?svg=true)](https://ci.appveyor.com/project/steviemcg/partech-simpleinstallscripts/branch/master)
+
 ## Before you start
 
 - SQL Server 2016 (Express is OK) must already be installed, and the sa account enabled

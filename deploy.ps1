@@ -2,6 +2,7 @@ if ($env:APPVEYOR_REPO_BRANCH -ne "master") {
     Write-Host "Skipping deploy as not master branch"
     return
 }
+
 if ($env:ShouldDeploy -ne "True") { 
     Write-Host "Skipping deploy as ShouldDeploy is not set to True"
     return

@@ -8,9 +8,13 @@ param(
     [Parameter(Mandatory)] [string] $SqlAdminPassword
 )
 
-Write-Host "Commit message: $($Env:APPVEYOR_REPO_COMMIT_MESSAGE)"
 if ($Env:APPVEYOR_REPO_COMMIT_MESSAGE -like '*[[skip test]]*') {
     Write-Host "Skipping tests due to commit message" -ForegroundColor Magenta
+    return
+}
+
+if ($env:APPVEYOR_REPO_BRANCH -eq "master") { 
+    Write-Host "Skipping test as master branch"
     return
 }
 

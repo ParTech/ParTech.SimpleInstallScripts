@@ -23,7 +23,8 @@ environment:
     SiteUrl: https://appveyor.cm.local
   - Topology: 902XP0
     SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
-    SiteUrl: http://appveyor.dev.local    
+    SiteUrl: http://appveyor.dev.local
+    ShouldDeploy: True
 services:
 - iis
 - mssql2017

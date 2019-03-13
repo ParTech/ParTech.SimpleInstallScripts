@@ -1,9 +1,12 @@
-Write-Host $env:APPVEYOR_JOB_NAME
+if ($env:APPVEYOR_REPO_BRANCH -ne "master") { 
+    Write-Host "Skipping deploy as not master branch"
+    return
+}
+if ($env:ShouldDeploy -ne "True") { 
+    Write-Host "Skipping deploy as ShouldDeploy is not set to True"
+    return
+}
 
-if ($env:APPVEYOR_REPO_BRANCH -ne "master") { return }
-#if ($env:APPVEYOR_JOB_NUMBER -ne 5) { return }
-
-return
 Remove-Item -Recurse ParTech.SimpleInstallScripts -ErrorAction SilentlyContinue
 New-Item ParTech.SimpleInstallScripts -ItemType "directory"
 

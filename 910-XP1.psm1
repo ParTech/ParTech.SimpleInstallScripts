@@ -103,13 +103,18 @@ Function Install-Sitecore910XP1 (
     }
 
     If ($DoInstallPrerequisites) {
-        Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-        Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
+        Try {
+            Push-Location $PSScriptRoot
+            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+            Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
+        } Finally {
+            Pop-Location
+        }
     }
 
-    Push-Location $SCInstallRoot
-
     Try {
+        Push-Location $SCInstallRoot
+
         If ($DoUninstall) {
             Uninstall-SitecoreConfiguration @XP1Parameters *>&1 | Tee-Object XP1-SingleDeveloper-Uninstall.log
         } else {

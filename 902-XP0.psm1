@@ -30,23 +30,29 @@ Function Install-Sitecore902XP0 (
                       "XP0 Configuration files 9.0.2 rev. 180604.zip"
    
     If ($DoInstallPrerequisites) {
-        # 9.0.2 doesn't ship with Prerequisites.json so needs to be stored separately
-        Invoke-DownloadIfNeeded "$DownloadBase/Prerequisites.json" "$SCInstallRoot\Prerequisites.json"
+        Try {
+            Push-Location $PSScriptRoot
 
-        Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-        Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword       
+            # 9.0.2 doesn't ship with Prerequisites.json so needs to be stored separately
+            Invoke-DownloadIfNeeded "$DownloadBase/Prerequisites.json" "$SCInstallRoot\Prerequisites.json"
 
-        # Only SIF 2.0 installs the prerequisites, now remove it and install 1.2.1 instead
-        Remove-Module SitecoreInstallFramework
-        Install-SitecoreInstallationFramework -Version $SifVersion
+            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+            Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword       
+
+            # Only SIF 2.0 installs the prerequisites, now remove it and install 1.2.1 instead
+            Remove-Module SitecoreInstallFramework
+            Install-SitecoreInstallationFramework -Version $SifVersion            
+        } Finally {
+            Pop-Location
+        }
     }
 
     Remove-Module SitecoreInstallFramework -ErrorAction SilentlyContinue
     Import-Module -Name SitecoreInstallFramework -Force -RequiredVersion $SifVersion
 
-    Push-Location $SCInstallRoot
-
     Try {
+        Push-Location $SCInstallRoot
+
         $params = @{
             Path = "$SCInstallRoot\xconnect-createcert.json"
             CertificateName = $XConnectSiteName

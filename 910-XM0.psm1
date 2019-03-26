@@ -61,26 +61,10 @@ Function Install-Sitecore910XM0 (
     }
 
     If ($DoInstallPrerequisites) {
-        Try {
-            Push-Location $PSScriptRoot
-            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-            Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
-        } Finally {
-            Pop-Location
-        }
+        Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort `
+                                 -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
     }
 
-    Try {
-        Push-Location $SCInstallRoot
-
-        If ($DoUninstall) {
-            Uninstall-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM0-SingleDeveloper-Uninstall.log
-        } else {
-            Install-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM0-SingleDeveloper.log
-        }
-    } Finally {
-        Pop-Location
-    }
-
+    Install-SitecoreWrapper "910-XM0" $singleDeveloperParams $SCInstallRoot -DoUninstall:$DoUninstall
     Install-SitecoreConfiguration "$PSScriptRoot\SetRole.json" -SiteName $SitecoreContentManagementSitename -Role Standalone
 }

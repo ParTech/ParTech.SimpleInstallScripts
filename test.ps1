@@ -20,5 +20,18 @@ if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
 
 $ErrorActionPreference = "Stop"
 Import-Module .\ParTech.SimpleInstallScripts.psd1
-Invoke-Expression "Install-Sitecore$($Topology) $Prefix -SqlAdminPassword $SqlAdminPassword -DoInstallPrerequisites"
-Install-SitecoreConfiguration .\PackageInstaller.json -Package "Sitecore PowerShell Extensions-5.0.zip" -SiteFolder $SiteFolder -DownloadBase $DownloadBase -DownloadFolder $DownloadFolder -SiteUrl $SiteUrl
+
+Try {
+    # Ensure that the scripts can be run from anywhere, not just the checkout directory
+    Push-Location C:\
+    Invoke-Expression "Install-Sitecore$($Topology) $Prefix -SqlAdminPassword $SqlAdminPassword -DoInstallPrerequisites"
+} Finally {
+    Pop-Location
+}
+
+Try {
+    Push-Location $PSScriptRoot
+    Install-SitecoreConfiguration .\PackageInstaller.json -Package "Sitecore PowerShell Extensions-5.0.zip" -SiteFolder $SiteFolder -DownloadBase $DownloadBase -DownloadFolder $DownloadFolder -SiteUrl $SiteUrl
+} Finally {
+    Pop-Location
+}

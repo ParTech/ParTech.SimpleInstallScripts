@@ -36,12 +36,12 @@ Function Install-Sitecore902XP0 (
             # 9.0.2 doesn't ship with Prerequisites.json so needs to be stored separately
             Invoke-DownloadIfNeeded "$DownloadBase/Prerequisites.json" "$SCInstallRoot\Prerequisites.json"
 
-            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-            Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword       
+            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort `
+                                 -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
 
             # Only SIF 2.0 installs the prerequisites, now remove it and install 1.2.1 instead
             Remove-Module SitecoreInstallFramework
-            Install-SitecoreInstallationFramework -Version $SifVersion            
+            Install-SitecoreInstallFramework -Version $SifVersion            
         } Finally {
             Pop-Location
         }
@@ -115,6 +115,6 @@ Function Install-Sitecore902XP0 (
 
         # Put the latest version of SIF back
         Remove-Module SitecoreInstallFramework
-        Install-SitecoreInstallationFramework        
+        Install-SitecoreInstallFramework        
     }
 }

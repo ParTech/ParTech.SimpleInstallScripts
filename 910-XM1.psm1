@@ -56,24 +56,10 @@ Function Install-Sitecore910XM1 (
     }
 
     If ($DoInstallPrerequisites) {
-        Try {
-            Push-Location $PSScriptRoot
-            Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-            Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
-        } Finally {
-            Pop-Location
-        }
+        Install-AllPrerequisites -SCInstallRoot $SCInstallRoot -DownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort `
+                                 -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
     }
 
-    Try {
-        Push-Location $SCInstallRoot
 
-        If ($DoUninstall) {
-            Uninstall-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM1-SingleDeveloper-Uninstall.log
-        } else {
-            Install-SitecoreConfiguration @singleDeveloperParams *>&1 | Tee-Object XM1-SingleDeveloper.log
-        }
-    } Finally {
-        Pop-Location
-    }
+    Install-SitecoreWrapper "910-XM1" $singleDeveloperParams $SCInstallRoot -DoUninstall:$DoUninstall
 }

@@ -9,24 +9,32 @@ Function Invoke-EnsureAdmin() {
 }
 
 Function Register-SitecoreGallery() {
+    Get-PSRepository -Name "SitecoreGallery" -ErrorVariable ev1 -ErrorAction SilentlyContinue | out-null
+    If ($null -eq $ev1 -or $ev1.count -eq 0)
+    {
+      return
+    }
+    
     Get-PackageProvider -Name Nuget -ForceBootstrap
     Register-PSRepository -Name "SitecoreGallery" `
                           -SourceLocation "https://sitecore.myget.org/F/sc-powershell/api/v2" `
                           -InstallationPolicy Trusted | Out-Null
 
-    Write-Host ("PowerShell repository `"SitecoreGallery`" has been registered.") -ForegroundColor Green
+    Write-Host "PowerShell repository `"SitecoreGallery`" has been registered." -ForegroundColor Green
 }
 
-Function Install-SitecoreInstallationFramework(
+Function Install-SitecoreInstallFramework(
     [string] $Version
 ) {
-    if ($null -eq $Version) {
+    Register-SitecoreGallery
+
+    if (!$Version) {
         [array] $sifModules = Find-Module -Name "SitecoreInstallFramework" -Repository "SitecoreGallery"
         $latestSIFModule = $sifModules[-1]
         $Version = $latestSIFModule.Version.ToString()
     }
 
-    Install-Module -Name "SitecoreInstallFramework" -Repository "SitecoreGallery" -Force -Scope AllUsers -SkipPublisherCheck -AllowClobber -RequiredVersion $Version | Out-Null
+    Install-Module -Name "SitecoreInstallFramework" -Repository "SitecoreGallery" -Force -Scope AllUsers -SkipPublisherCheck -AllowClobber -RequiredVersion $Version
 }
 
 Function Enable-ModernSecurityProtocols() {
@@ -51,8 +59,13 @@ Function Install-Solr(
 ) {
     Write-Host "================= Installing Solr Server =================" -foregroundcolor "green"
     
-    $config = Resolve-Path "$PSScriptRoot\SolrServer.json"
-    Install-SitecoreConfiguration $config -DownloadFolder $SCInstallRoot -NSSMDownloadBase $NSSMDownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+    Try {
+        Push-Location $PSScriptRoot
+        $config = Resolve-Path "$PSScriptRoot\SolrServer.json"
+        Install-SitecoreConfiguration $config -DownloadFolder $SCInstallRoot -NSSMDownloadBase $NSSMDownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+    } Finally {
+        Pop-Location
+    }
 }
 
 Function Install-AllPrerequisites(
@@ -61,15 +74,18 @@ Function Install-AllPrerequisites(
     [Parameter(Mandatory)] [string] $SolrVersion,
     [Parameter(Mandatory)] [string] $SolrHost,
     [Parameter(Mandatory)] [string] $SolrPort,
+    [Parameter(Mandatory)] [string] $SqlServer,
+    [Parameter(Mandatory)] [string] $SqlAdminUser,
+    [Parameter(Mandatory)] [string] $SqlAdminPassword,
     [string] $SifVersion    
 ) {
     $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
 
     Invoke-EnsureAdmin
-    Register-SitecoreGallery
-    Install-SitecoreInstallationFramework -Version $SifVersion
+    Install-SitecoreInstallFramework -Version $SifVersion
     Install-SifPrerequisites -SCInstallRoot $SCInstallRoot
     Install-Solr -SCInstallRoot $SCInstallRoot -NSSMDownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+    Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
 
     Write-Host "Successfully setup environment (time: $($elapsed.Elapsed.ToString()))"
 }
@@ -118,4 +134,24 @@ Function Invoke-DownloadIfNeeded
     
     $client = (New-Object System.Net.WebClient)
     $client.DownloadFile($source, $target)
+}
+
+Function Install-SitecoreWrapper (
+    [Parameter(Mandatory)] [string] $Name,    
+    [Parameter(Mandatory)] [Hashtable] $Params,
+    [Parameter(Mandatory)] [string] $SCInstallRoot,
+    [switch] $DoUninstall # Uninstalls Sitecore instead of installing    
+) 
+{
+    Try {
+        Push-Location $SCInstallRoot
+
+        If ($DoUninstall) {
+            Uninstall-SitecoreConfiguration @params *>&1 | Tee-Object "$($name)-Uninstall.log"
+        } else {
+            Install-SitecoreConfiguration @params *>&1 | Tee-Object "$($name).log"
+        }
+    } Finally {
+        Pop-Location
+    }
 }

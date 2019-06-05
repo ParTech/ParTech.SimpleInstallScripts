@@ -9,6 +9,18 @@ environment:
   DownloadBase:
     secure: tvDdT2DZMOgijvJd0Pvmuic+soMCi6cNrh+ndejvp0gb6vCTKWp3tbXNmoUi5kjzpdTZetFLWNKDuim/FJ0aVw==
   matrix:
+  - Topology: 911XM0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: https://appveyor.dev.local
+  - Topology: 911XM1
+    SiteFolder: C:\inetpub\wwwroot\appveyor.cm.local
+    SiteUrl: https://appveyor.cm.local
+  - Topology: 911XP0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: http://appveyor.dev.local
+  - Topology: 911XP1
+    SiteFolder: C:\inetpub\wwwroot\appveyor.cm.local
+    SiteUrl: https://appveyor.cm.local  
   - Topology: 910XM0
     SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
     SiteUrl: https://appveyor.dev.local

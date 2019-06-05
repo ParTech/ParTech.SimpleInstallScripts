@@ -21,6 +21,9 @@ environment:
   - Topology: 910XP1
     SiteFolder: C:\inetpub\wwwroot\appveyor.cm.local
     SiteUrl: https://appveyor.cm.local
+  - Topology: 902XM0
+    SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
+    SiteUrl: https://appveyor.dev.local
   - Topology: 902XP0
     SiteFolder: C:\inetpub\wwwroot\appveyor.dev.local
     SiteUrl: http://appveyor.dev.local

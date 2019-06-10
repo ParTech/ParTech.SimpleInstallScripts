@@ -140,7 +140,7 @@ Function Install-SitecoreWrapper (
     [Parameter(Mandatory)] [string] $Name,    
     [Parameter(Mandatory)] [Hashtable] $Params,
     [Parameter(Mandatory)] [string] $SCInstallRoot,
-    [switch] $DoUninstall # Uninstalls Sitecore instead of installing    
+    [switch] $DoUninstall # Uninstalls Sitecore instead of installing
 ) 
 {
     Try {

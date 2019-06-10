@@ -1,7 +1,7 @@
 Set-StrictMode -Version 2.0
 
 Function Install-Sitecore910XP0 (
-    [string] [Parameter(Mandatory)] [string] $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
+    [Parameter(Mandatory)] [string] $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
     [string] $SitecoreAdminPassword = "b", # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
     [string] $SCInstallRoot = "C:\Downloads\9.1.0", # The root folder with the license file and WDP files.
     [string] $XConnectSiteName = "$prefix.xconnect.local", # The name for the XConnect service.

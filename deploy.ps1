@@ -16,6 +16,7 @@ Copy-Item -Path *.psm1 -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path *.json -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path *.asmx -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path *.md -Destination ParTech.SimpleInstallScripts
+Copy-Item -Path *.dll -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path LICENSE -Destination ParTech.SimpleInstallScripts
 
 Update-ModuleManifest -Path .\ParTech.SimpleInstallScripts\ParTech.SimpleInstallScripts.psd1 -ModuleVersion $Env:APPVEYOR_BUILD_VERSION

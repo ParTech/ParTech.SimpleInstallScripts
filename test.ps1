@@ -19,7 +19,10 @@ if ($env:APPVEYOR_REPO_BRANCH -eq "master") {
 }
 
 $ErrorActionPreference = "Stop"
-Import-Module .\ParTech.SimpleInstallScripts.psd1
+
+.\create-artifact.ps1
+
+Import-Module .\ParTech.SimpleInstallScripts\ParTech.SimpleInstallScripts.psd1
 
 Try {
     # Ensure that the scripts can be run from anywhere, not just the checkout directory

@@ -1,3 +1,5 @@
+$ErrorActionPreference = "Stop"
+
 if ($env:APPVEYOR_REPO_BRANCH -ne "master") { 
     Write-Host "Skipping deploy as not master branch"
     return
@@ -8,16 +10,8 @@ if ($env:ShouldDeploy -ne "True") {
     return
 }
 
-Remove-Item -Recurse ParTech.SimpleInstallScripts -ErrorAction SilentlyContinue
-New-Item ParTech.SimpleInstallScripts -ItemType "directory"
 
-Copy-Item -Path *.psd1 -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path *.psm1 -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path *.json -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path *.asmx -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path *.md -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path *.dll -Destination ParTech.SimpleInstallScripts
-Copy-Item -Path LICENSE -Destination ParTech.SimpleInstallScripts
+& .\create-artifact.ps1
 
 Update-ModuleManifest -Path .\ParTech.SimpleInstallScripts\ParTech.SimpleInstallScripts.psd1 -ModuleVersion $Env:APPVEYOR_BUILD_VERSION
 

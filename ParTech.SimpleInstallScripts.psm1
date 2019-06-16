@@ -14,6 +14,8 @@ Function Register-SitecoreGallery() {
     {
       return
     }
+
+    Write-Host "================= Installing Sitecore PowerShell Gallery =================" -foregroundcolor "green"    
     
     Get-PackageProvider -Name Nuget -ForceBootstrap
     Register-PSRepository -Name "SitecoreGallery" `
@@ -28,6 +30,8 @@ Function Install-SitecoreInstallFramework(
 ) {
     Register-SitecoreGallery
 
+    Write-Host "================= Installing Sitecore Install Framework =================" -foregroundcolor "green"    
+
     if (!$Version) {
         [array] $sifModules = Find-Module -Name "SitecoreInstallFramework" -Repository "SitecoreGallery"
         $latestSIFModule = $sifModules[-1]
@@ -38,21 +42,21 @@ Function Install-SitecoreInstallFramework(
 }
 
 Function Enable-ModernSecurityProtocols() {
-    Write-Host "Enabling modern security protocols..." -foregroundcolor "green"
+    Write-Host "================= Enabling modern security protocols =================" -foregroundcolor "green"    
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 }
 
 Function Install-SifPrerequisites(
-    [Parameter(Mandatory)] [string] $SCInstallRoot
+    [Parameter(Mandatory)] [string] $InstallRoot
 ) {
-    Write-Host "================= Installing Prerequisites =================" -foregroundcolor "green"
-    $config = Resolve-Path "$SCInstallRoot\Prerequisites.json"
+    Write-Host "================= Installing SIF Prerequisites =================" -foregroundcolor "green"
+    $config = Resolve-Path "$InstallRoot\Prerequisites.json"
     Install-SitecoreConfiguration $config
 }
 
 Function Install-Solr(
-    [Parameter(Mandatory)] [string] $SCInstallRoot,
-    [Parameter(Mandatory)] [string] $NSSMDownloadBase,
+    [Parameter(Mandatory)] [string] $InstallRoot,
+    [Parameter(Mandatory)] [string] $DownloadBase,
     [Parameter(Mandatory)] [string] $SolrVersion,
     [Parameter(Mandatory)] [string] $SolrHost,
     [Parameter(Mandatory)] [string] $SolrPort
@@ -62,14 +66,14 @@ Function Install-Solr(
     Try {
         Push-Location $PSScriptRoot
         $config = Resolve-Path "$PSScriptRoot\SolrServer.json"
-        Install-SitecoreConfiguration $config -DownloadFolder $SCInstallRoot -NSSMDownloadBase $NSSMDownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+        Install-SitecoreConfiguration $config -DownloadFolder $InstallRoot -NSSMDownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
     } Finally {
         Pop-Location
     }
 }
 
 Function Install-AllPrerequisites(
-    [Parameter(Mandatory)] [string] $SCInstallRoot,
+    [Parameter(Mandatory)] [string] $InstallRoot,
     [Parameter(Mandatory)] [string] $DownloadBase,
     [Parameter(Mandatory)] [string] $SolrVersion,
     [Parameter(Mandatory)] [string] $SolrHost,
@@ -80,50 +84,52 @@ Function Install-AllPrerequisites(
     [string] $SifVersion    
 ) {
     $elapsed = [System.Diagnostics.Stopwatch]::StartNew()
+    Write-Host "================= Installing All Prerequisites =================" -foregroundcolor "green"
 
     Invoke-EnsureAdmin
     Install-SitecoreInstallFramework -Version $SifVersion
-    Install-SifPrerequisites -SCInstallRoot $SCInstallRoot
-    Install-Solr -SCInstallRoot $SCInstallRoot -NSSMDownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
-    Enable-ContainedDatabaseAuthentication -SqlServer $SqlServer -SqlAdminUser $SqlAdminUser -SqlAdminPassword $SqlAdminPassword
+    Install-SifPrerequisites -InstallRoot $InstallRoot
+    Invoke-CommandWithEffectiveParameters "Install-Solr" $PSBoundParameters
+    Invoke-CommandWithEffectiveParameters "Enable-ContainedDatabaseAuthentication" $PSBoundParameters
 
     Write-Host "Successfully setup environment (time: $($elapsed.Elapsed.ToString()))"
 }
 
 Function Invoke-DownloadPackages (
     [Parameter(Mandatory)] [string] $DownloadBase,
-    [Parameter(Mandatory)] [string] $SCInstallRoot,
-    [Parameter(Mandatory)] [string] $PackagesName,
-    [Parameter(Mandatory)] [string] $ConfigFilesName
+    [Parameter(Mandatory)] [string] $InstallRoot,
+    [Parameter(Mandatory)] [string] $WdpsZipName,
+    [Parameter(Mandatory)] [string] $ConfigsZipName
 ) {
-    Write-Output "Downloading packages..."
-    New-Item -ItemType Directory -Force -Path $SCInstallRoot
+    Write-Host "================= Downloading packages =================" -foregroundcolor "green"    
+    New-Item -ItemType Directory -Force -Path $InstallRoot
 
-    $PackagesUrl = "$DownloadBase/$PackagesName"
-    $PackagesZip = "$SCInstallRoot\$PackagesName"
-    Invoke-DownloadIfNeeded $PackagesUrl $PackagesZip
-    Expand-Archive $PackagesZip -DestinationPath $SCInstallRoot -Force
+    $WdpsUrl = "$DownloadBase/$WdpsZipName"
+    $WdpsZip = "$InstallRoot\$WdpsZipName"
+    Invoke-DownloadIfNeeded $WdpsUrl $WdpsZip
+    Expand-Archive $WdpsZip -DestinationPath $InstallRoot -Force
     
-    $ConfigFilesZip = "$SCInstallRoot\$ConfigFilesName"
-    Expand-Archive $ConfigFilesZip -DestinationPath $SCInstallRoot -Force
+    $ConfigFilesZip = "$InstallRoot\$ConfigsZipName"
+    Expand-Archive $ConfigFilesZip -DestinationPath $InstallRoot -Force
 
-    Invoke-DownloadIfNeeded "$DownloadBase/license.xml" "$SCInstallRoot\license.xml"
+    Invoke-DownloadIfNeeded "$DownloadBase/license.xml" "$InstallRoot\license.xml"
 }
 
 Function Enable-ContainedDatabaseAuthentication
 (
-    [string] $SqlServer = ".", # The DNS name or IP of the SQL Instance.
-    [string] $SqlAdminUser = "sa", # A SQL user with sysadmin privileges.
-    [string] $SqlAdminPassword = "12345" # The password for $SQLAdminUser.
+    [Parameter(Mandatory)] [string] $SqlServer, # The DNS name or IP of the SQL Instance.
+    [Parameter(Mandatory)] [string] $SqlAdminUser, # A SQL user with sysadmin privileges.
+    [Parameter(Mandatory)] [string] $SqlAdminPassword # The password for $SQLAdminUser.
 )
 {
+    Write-Host "================= Enabling Contained Database Authentication =================" -foregroundcolor "green"    
     sqlcmd -S $SqlServer -U $SqlAdminUser -P $SqlAdminPassword -h-1 -Q "sp_configure 'contained database authentication', 1; RECONFIGURE;"
 }
 
 Function Invoke-DownloadIfNeeded
 (
-    [Parameter(Mandatory)][string]$source,
-    [Parameter(Mandatory)][string]$target
+    [Parameter(Mandatory)] [string] $source,
+    [Parameter(Mandatory)] [string] $target
 )
 {
     Write-Host "Invoke-DownloadIfNeeded to $target"
@@ -136,22 +142,32 @@ Function Invoke-DownloadIfNeeded
     $client.DownloadFile($source, $target)
 }
 
-Function Install-SitecoreWrapper (
-    [Parameter(Mandatory)] [string] $Name,    
-    [Parameter(Mandatory)] [Hashtable] $Params,
-    [Parameter(Mandatory)] [string] $SCInstallRoot,
-    [switch] $DoUninstall # Uninstalls Sitecore instead of installing
-) 
-{
-    Try {
-        Push-Location $SCInstallRoot
-
-        If ($DoUninstall) {
-            Uninstall-SitecoreConfiguration @params *>&1 | Tee-Object "$($name)-Uninstall.log"
-        } else {
-            Install-SitecoreConfiguration @params *>&1 | Tee-Object "$($name).log"
+Function ConvertTo-Hashtable {
+    [CmdletBinding()]
+    [OutputType('hashtable')]
+    param (
+        [Parameter(ValueFromPipeline)]
+        $InputObject
+    )
+ 
+    process {
+        $hash = [ordered]@{}
+        foreach ($property in $InputObject.PSObject.Properties) {
+            $hash[$property.Name] = $property.Value
         }
-    } Finally {
-        Pop-Location
+
+        Return $hash
     }
+}
+
+Function Get-DefaultSitecoreParameters
+{
+    param([parameter(Mandatory)] [string] $SitecoreVersion)    
+
+    $DefaultsPath = "$PSScriptRoot\Defaults\$($SitecoreVersion).json"
+    If (!(Test-Path($DefaultsPath))) {
+        throw "Defaults not found: $DefaultsPath"
+    }
+
+    Return Get-Content -Raw -Path $DefaultsPath | ConvertFrom-Json | ConvertTo-Hashtable
 }

@@ -10,7 +10,6 @@ if ($env:ShouldDeploy -ne "True") {
     return
 }
 
-
 & .\create-artifact.ps1
 
 Update-ModuleManifest -Path .\ParTech.SimpleInstallScripts\ParTech.SimpleInstallScripts.psd1 -ModuleVersion $Env:APPVEYOR_BUILD_VERSION

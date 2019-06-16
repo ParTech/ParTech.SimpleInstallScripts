@@ -8,3 +8,4 @@ Copy-Item -Path *.asmx -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path *.md -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path *.dll -Destination ParTech.SimpleInstallScripts
 Copy-Item -Path LICENSE -Destination ParTech.SimpleInstallScripts
+Copy-Item -Path Defaults -Destination ParTech.SimpleInstallScripts -Recurse

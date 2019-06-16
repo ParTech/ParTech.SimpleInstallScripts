@@ -1,10 +1,7 @@
 param(
-    [Parameter(Mandatory)] [string] $Topology,
     [Parameter(Mandatory)] [string] $Prefix,
-    [Parameter(Mandatory)] [string] $SiteFolder,
-    [Parameter(Mandatory)] [string] $SiteUrl,
+    [Parameter(Mandatory)] [string] $SitecoreVersion,
     [Parameter(Mandatory)] [string] $DownloadBase,
-    [Parameter(Mandatory)] [string] $DownloadFolder,
     [Parameter(Mandatory)] [string] $SqlAdminPassword
 )
 
@@ -27,14 +24,19 @@ Import-Module .\ParTech.SimpleInstallScripts\ParTech.SimpleInstallScripts.psd1
 Try {
     # Ensure that the scripts can be run from anywhere, not just the checkout directory
     Push-Location C:\
-    Invoke-Expression "Install-Sitecore$($Topology) $Prefix -SqlAdminPassword $SqlAdminPassword -DoInstallPrerequisites"
-} Finally {
-    Pop-Location
-}
-
-Try {
-    Push-Location $PSScriptRoot
-    Install-SitecoreConfiguration .\PackageInstaller.json -Package "Sitecore PowerShell Extensions-5.0.zip" -SiteFolder $SiteFolder -DownloadBase $DownloadBase -DownloadFolder $DownloadFolder -SiteUrl $SiteUrl
+    
+    Install-Sitecore91 -Prefix $Prefix `
+                      -SitecoreVersion $SitecoreVersion `
+                      -DownloadBase $DownloadBase `
+                      -SqlServer . `
+                      -SqlAdminUser sa `
+                      -SqlAdminPassword $SqlAdminPassword `
+                      -DoInstallPrerequisites `
+                      -Packages @("Sitecore PowerShell Extensions-5.0.zip") `
+                      -DoSitecorePublish
+                      #-DoRebuildLinkDatabases `
+                      #-DoRebuildSearchIndexes `
+                      #-DoDeployMarketingDefinitions
 } Finally {
     Pop-Location
 }

@@ -1,25 +1,37 @@
-<%@ webservice language="C#" class="PackageInstaller" %>
+<%@ WebService Language="C#" Class="SimpleInstallScriptsProxy" %>
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.IO;
+using System.Linq;
 using System.Web.Services;
 using System.Xml;
+using Sitecore;
+using Sitecore.Configuration;
+using Sitecore.ContentSearch;
+using Sitecore.ContentSearch.Maintenance;
+using Sitecore.Data;
 using Sitecore.Data.Engines;
+using Sitecore.Data.Managers;
+using Sitecore.Install;
 using Sitecore.Install.Files;
 using Sitecore.Install.Framework;
 using Sitecore.Install.Items;
+using Sitecore.Install.Utils;
+using Sitecore.Jobs;
+using Sitecore.Publishing;
 using Sitecore.SecurityModel;
 using Sitecore.Update;
 using Sitecore.Update.Installer;
 using Sitecore.Update.Installer.Utils;
-using Sitecore.Update.Utils;
+using InstallMode = Sitecore.Update.Utils.InstallMode;
 using log4net;
 using log4net.Config;
 
 [WebService(Namespace = "http://tempuri.org/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-[System.ComponentModel.ToolboxItem(false)]
-public class PackageInstaller : System.Web.Services.WebService
+[ToolboxItem(false)]
+public class SimpleInstallScriptsProxy : WebService
 {
     [WebMethod(Description = "Installs a Sitecore Zip or Update Package.")]
     public void InstallPackage(string path)
@@ -40,6 +52,36 @@ public class PackageInstaller : System.Web.Services.WebService
         }
     }
 
+    [WebMethod(Description = "Publishes a database")]
+    public void SmartPublish(string sourceDatabaseName, string targetDatabaseName)
+    {
+        var sourceDatabase = Factory.GetDatabase(sourceDatabaseName);
+        var targetDatabase = Factory.GetDatabase(targetDatabaseName);
+        Database[] targets = { targetDatabase };
+
+        var languages = LanguageManager.GetLanguages(sourceDatabase).ToArray();
+        PublishManager.PublishSmart(sourceDatabase, targets, languages);
+    }
+
+    [WebMethod(Description = "Determines if any jobs are running")]
+    public bool AreJobsRunning()
+    {
+        return JobManager.GetJobs().Any(x => !x.IsDone);
+    }
+
+    [WebMethod(Description = "Rebuilds a Link Database")]
+    public void RebuildLinkDatabase(string databaseName)
+    {
+        JobManager.Start(new JobOptions(string.Format("RebuildLinkDatabase-{0}", databaseName), "SimpleInstallScripts", "shell", this, "RebuildLinkDatabaseInternal", new object[] { databaseName }));
+    }
+
+    [WebMethod(Description = "Rebuilds a search index")]
+    public void RebuildSearchIndex(string indexName)
+    {
+        var index = ContentSearchManager.GetIndex(indexName);
+        IndexCustodian.FullRebuild(index);
+    }
+
     private void InstallUpdatePackage(string path)
     {
         var log = LogManager.GetLogger("root");
@@ -58,7 +100,7 @@ public class PackageInstaller : System.Web.Services.WebService
         }
     }
 
-    private void InstallZipPackage(string path)
+    private static void InstallZipPackage(string path)
     {
         Sitecore.Context.SetActiveSite("shell");
 
@@ -67,13 +109,20 @@ public class PackageInstaller : System.Web.Services.WebService
             using (new SyncOperationContext())  
             {  
                 var context = new SimpleProcessingContext();
-                var options = new Sitecore.Install.Utils.BehaviourOptions(Sitecore.Install.Utils.InstallMode.Overwrite, Sitecore.Install.Utils.MergeMode.Undefined);
+                var options = new BehaviourOptions(Sitecore.Install.Utils.InstallMode.Overwrite, MergeMode.Undefined);
                 context.AddAspect(new DefaultItemInstallerEvents(options));  
                 context.AddAspect(new DefaultFileInstallerEvents(true));  
           
-                var installer = new Sitecore.Install.Installer();  
+                var installer = new Installer();  
                 installer.InstallPackage(path, context);  
             }  
         }  
+    }
+
+    [UsedImplicitly]
+    private void RebuildLinkDatabaseInternal(string databaseName)
+    {
+        var database = Factory.GetDatabase(databaseName);
+        Globals.LinkDatabase.Rebuild(database);
     }
 }

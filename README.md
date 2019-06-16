@@ -12,7 +12,19 @@ This module installs Sitecore 9 and its prerequisites on [AppVeyor](https://www.
 ## How to consume this module
 
     Install-Module ParTech.SimpleInstallScripts
-    Install-Sitecore910XM1 YourSiteName -DoInstallPrerequisites -DownloadBase "https://file-repository/sitecore-assets"
+    
+    Install-Sitecore91 -Prefix YourSiteName `
+                      -SitecoreVersion 911XP0 `
+                      -DoInstallPrerequisites `
+                      -DownloadBase "https://file-repository/sitecore-assets"
+                      -SqlServer .\SQLEXPRESS `
+                      -SqlAdminUser sa `
+                      -SqlAdminPassword 12345 `
+                      -Packages @("Sitecore PowerShell Extensions-5.1.zip") `
+                      -DoSitecorePublish `
+                      -DoRebuildLinkDatabases `
+                      -DoRebuildSearchIndexes `
+                      -DoDeployMarketingDefinitions
 
 ### DoInstallPrerequisites
 
@@ -21,7 +33,7 @@ This module installs Sitecore 9 and its prerequisites on [AppVeyor](https://www.
 * Installs the standard prerequisites (delivered by Sitecore's prerequisites.json)
 * Installs the correct version of Solr
 
-### Install-Sitecore{Topology}
+### Install-Sitecore9
 
 This downloads the Sitecore zip files from your private repository if necessary, and extracts them. Since Sitecore 9.1, sample PowerShell scripts are supplied which pair up with sample json configurations. This module simply takes those samples and converts them to parameters, and executes them as is.
 
@@ -31,9 +43,7 @@ If you require changes to the sample configurations, then this module probably i
 
 ### Installing a .zip or .update package
 
-This module supports installing zip and update packages by copying the `PackageInstaller.asmx` agent to the Content Management server and executing the appropriate Sitecore method. The agent is removed again when done.
-
-    Install-SitecoreConfiguration .\PackageInstaller.json -Package "Sitecore PowerShell Extensions-5.0.zip"
+This module supports installing zip and update packages by copying the `SimpleInstallScriptsProxy.asmx` agent to the Content Management server and executing the appropriate Sitecore method. The agent is removed again when done.
 
 ### Storing Sitecore assets online
 

@@ -2,7 +2,8 @@ param(
     [Parameter(Mandatory)] [string] $Prefix,
     [Parameter(Mandatory)] [string] $SitecoreVersion,
     [Parameter(Mandatory)] [string] $DownloadBase,
-    [Parameter(Mandatory)] [string] $SqlAdminPassword
+    [Parameter(Mandatory)] [string] $SqlAdminPassword,
+    [Parameter(Mandatory)] [string] $InstallCommand
 )
 
 if ($Env:APPVEYOR_REPO_COMMIT_MESSAGE -like '*[[skip test]]*') {
@@ -25,14 +26,14 @@ Try {
     # Ensure that the scripts can be run from anywhere, not just the checkout directory
     Push-Location C:\
     
-    Install-Sitecore91 -Prefix $Prefix `
+    & $InstallCommand -Prefix $Prefix `
                       -SitecoreVersion $SitecoreVersion `
                       -DownloadBase $DownloadBase `
                       -SqlServer . `
                       -SqlAdminUser sa `
                       -SqlAdminPassword $SqlAdminPassword `
                       -DoInstallPrerequisites `
-                      -Packages @("Sitecore PowerShell Extensions-5.0.zip") `
+                      -Packages @("Sitecore.PowerShell.Extensions-5.1.zip") `
                       -DoSitecorePublish
                       #-DoRebuildLinkDatabases `
                       #-DoRebuildSearchIndexes `

@@ -72,7 +72,7 @@ public class SimpleInstallScriptsProxy : WebService
     [WebMethod(Description = "Rebuilds a Link Database")]
     public void RebuildLinkDatabase(string databaseName)
     {
-        JobManager.Start(new DefaultJobOptions(string.Format("RebuildLinkDatabase-{0}", databaseName), "SimpleInstallScripts", "shell", this, "RebuildLinkDatabaseInternal", new object[] { databaseName }));
+        JobManager.Start(new JobOptions(string.Format("RebuildLinkDatabase-{0}", databaseName), "SimpleInstallScripts", "shell", this, "RebuildLinkDatabaseInternal", new object[] { databaseName }));
     }
 
     [WebMethod(Description = "Rebuilds a search index")]

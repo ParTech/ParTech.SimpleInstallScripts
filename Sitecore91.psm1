@@ -130,7 +130,7 @@ Function Install-Sitecore91 (
 
             # Installs the .asmx agent to the Content Management / Standalone instance
             Install-SimpleInstallScriptsProxies $Parameters.SitecorePath
-            $proxy = New-WebServiceProxy -uri "$($Parameters.SitecoreUrl)/SimpleInstallScriptsProxy.asmx?WSDL"
+            $proxy = New-WebServiceProxy -uri "$($Parameters.SitecoreUrl)/SimpleInstallScriptsProxy91.asmx?WSDL"
             $proxy.Timeout = 1800000
 
             # Installs .zip and .update packages, such as Sitecore PowerShell Extensions-5.1.zip
@@ -179,7 +179,7 @@ Function Install-Sitecore91 (
             }
             
             if ($Parameters.Mode -eq "XP") {
-                $proxyXP = New-WebServiceProxy -uri "$($Parameters.SitecoreUrl)/SimpleInstallScriptsProxyXP.asmx?WSDL"
+                $proxyXP = New-WebServiceProxy -uri "$($Parameters.SitecoreUrl)/SimpleInstallScriptsProxyXP91.asmx?WSDL"
                 $proxyXP.Timeout = 1800000
     
                 # Deploys the Marketing Definitions. This can take a *long* time. Again, would be nice if they were pre-deployed by Sitecore.

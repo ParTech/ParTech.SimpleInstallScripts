@@ -6,8 +6,7 @@ Function Install-SimpleInstallScriptsProxies {
     )
 
     Write-Host "Installing Simple Install Scripts Proxies"
-    Copy-Item -Path "$PSScriptRoot\SimpleInstallScriptsProxy.asmx" -Destination $SiteFolder
-    Copy-Item -Path "$PSScriptRoot\SimpleInstallScriptsProxyXP.asmx" -Destination $SiteFolder
+    Copy-Item -Path "$PSScriptRoot\SimpleInstallScripts*.asmx" -Destination $SiteFolder
 }
 
 Function Remove-SimpleInstallScriptsProxies {
@@ -17,10 +16,7 @@ Function Remove-SimpleInstallScriptsProxies {
 
     Write-Host "Deleting Simple Install Scripts Proxy"
     
-    $installerPath = Join-Path $SiteFolder "SimpleInstallScriptsProxy.asmx"
-    Remove-Item -Path $installerPath -ErrorAction SilentlyContinue
-    
-    $installerPath = Join-Path $SiteFolder "SimpleInstallScriptsProxyXP.asmx"
+    $installerPath = Join-Path $SiteFolder "SimpleInstallScripts*.asmx"
     Remove-Item -Path $installerPath -ErrorAction SilentlyContinue
 }
 

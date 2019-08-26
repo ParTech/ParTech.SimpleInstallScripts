@@ -13,18 +13,18 @@ This module installs Sitecore 9 and its prerequisites on [AppVeyor](https://www.
 
     Install-Module ParTech.SimpleInstallScripts
     
-    Install-Sitecore91 -Prefix YourSiteName `
-                      -SitecoreVersion 911XP0 `
-                      -DoInstallPrerequisites `
-                      -DownloadBase "https://file-repository/sitecore-assets"
-                      -SqlServer .\SQLEXPRESS `
-                      -SqlAdminUser sa `
-                      -SqlAdminPassword 12345 `
-                      -Packages @("Sitecore PowerShell Extensions-5.1.zip") `
-                      -DoSitecorePublish `
-                      -DoRebuildLinkDatabases `
-                      -DoRebuildSearchIndexes `
-                      -DoDeployMarketingDefinitions
+    Install-Sitecore92 -Prefix YourSiteName `
+                       -SitecoreVersion 911XP0 `
+                       -DoInstallPrerequisites `
+                       -DownloadBase "https://file-repository/sitecore-assets" `
+                       -SqlServer .\SQLEXPRESS `
+                       -SqlAdminUser sa `
+                       -SqlAdminPassword 12345 `
+                       -Packages @("Sitecore PowerShell Extensions-5.1.zip") `
+                       -DoSitecorePublish `
+                       -DoRebuildLinkDatabases `
+                       -DoRebuildSearchIndexes `
+                       -DoDeployMarketingDefinitions
 
 ### DoInstallPrerequisites
 
@@ -33,7 +33,7 @@ This module installs Sitecore 9 and its prerequisites on [AppVeyor](https://www.
 * Installs the standard prerequisites (delivered by Sitecore's prerequisites.json)
 * Installs the correct version of Solr
 
-### Install-Sitecore9
+### Install-Sitecore91
 
 This downloads the Sitecore zip files from your private repository if necessary, and extracts them. Since Sitecore 9.1, sample PowerShell scripts are supplied which pair up with sample json configurations. This module simply takes those samples and converts them to parameters, and executes them as is.
 
@@ -51,9 +51,8 @@ This module expects the following assets to be available online in the `Download
 
 * WDP packages, for example **Sitecore 9.1.0 rev. 001564 (WDP XM1 packages).zip**
 * **license.xml**
-* For Sitecore 9.0 Update 2 and earlier: **prerequisites.json** from Sitecore 9.1 (it's really useful 😉)
 * **nssm-2.24.zip** for running Solr (during testing https://nssm.cc was regularly unavailable)
-* Modules that you would like to install, such as **Sitecore PowerShell Extensions-5.0.zip**
+* Modules that you would like to install, such as **Sitecore PowerShell Extensions-5.1.zip**
 
 If you prefer not to host the Sitecore assets online, simply ensure they are already in the specified download folder. You can then set a fake `DownloadBase` because it won't be used if the files already exist.
 

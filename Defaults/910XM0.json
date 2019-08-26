@@ -21,7 +21,7 @@
     "SolrService" : "solr-$($Parameters.SolrVersion)",
     "SolrRoot" : "$($Parameters.DriveLetter):\\solr\\$($Parameters.SolrService)",
     "PasswordRecoveryUrl" : "$($Parameters.SitecoreUrl)",
-    "SitecoreIdentityAuthority" : "https://$($Parameters.Prefix).identityserver.local",
+    "SitecoreIdentityAuthority" : "https://$($Parameters.IdentityServerSiteName)",
     "ClientSecret" : "SIF-Default",
     "AllowedCorsOrigins" : "$($Parameters.SitecoreUrl)"
 }

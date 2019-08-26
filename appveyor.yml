@@ -17,6 +17,7 @@ environment:
   - SitecoreVersion: 911XM1  
   - SitecoreVersion: 911XP0
   - SitecoreVersion: 911XP1
+  - SitecoreVersion: 920XP0
     ShouldDeploy: True
 services:
 - iis

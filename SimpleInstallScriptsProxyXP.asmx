@@ -16,7 +16,7 @@ public class SimpleInstallScriptsProxy : WebService
     [WebMethod(Description = "Deploys Marketing Definitions")]
     public void DeployMarketingDefinitions()
     {
-        JobManager.Start(new JobOptions("DeployMarketingDefinitions", "SimpleInstallScripts", "shell", this, "DeployMarketingDefinitionsInternal"));
+        JobManager.Start(new DefaultJobOptions("DeployMarketingDefinitions", "SimpleInstallScripts", "shell", this, "DeployMarketingDefinitionsInternal"));
     }
 
     [UsedImplicitly]

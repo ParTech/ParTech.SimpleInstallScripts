@@ -89,6 +89,9 @@ Function Install-Sitecore92 (
     If ($DoInstallPrerequisites) {
         # Registers the Sitecore PowerShell Gallery, installs Sitecore Install Framework, the correct version of Solr, etc.        
         Invoke-CommandWithEffectiveParameters "Install-AllPrerequisites" $Parameters
+
+        # Strangely the 9.2 prerequisites seem to leave "World Wide Web Publishing Service" stopped, turn it on now
+        net start W3SVC
     }
 
     Write-Host "================= Ensuring Valid Parameters =================" -foregroundcolor "green"

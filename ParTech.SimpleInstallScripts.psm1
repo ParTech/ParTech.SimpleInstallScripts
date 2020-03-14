@@ -55,8 +55,6 @@ Function Install-SifPrerequisites(
 }
 
 Function Install-Solr(
-    [Parameter(Mandatory)] [string] $InstallRoot,
-    [Parameter(Mandatory)] [string] $DownloadBase,
     [Parameter(Mandatory)] [string] $SolrVersion,
     [Parameter(Mandatory)] [string] $SolrHost,
     [Parameter(Mandatory)] [string] $SolrPort
@@ -65,8 +63,11 @@ Function Install-Solr(
     
     Try {
         Push-Location $PSScriptRoot
-        $config = Resolve-Path "$PSScriptRoot\SolrServer.json"
-        Install-SitecoreConfiguration $config -DownloadFolder $InstallRoot -NSSMDownloadBase $DownloadBase -SolrVersion $SolrVersion -SolrHost $SolrHost -SolrPort $SolrPort
+        $config = Resolve-Path "$PSScriptRoot\Solr-SingleDeveloper.json"
+        Install-SitecoreConfiguration $config `
+            -SolrVersion $SolrVersion `
+            -SolrDomain $SolrHost `
+            -SolrPort $SolrPort
     } Finally {
         Pop-Location
     }

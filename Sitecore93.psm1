@@ -1,6 +1,4 @@
-Set-StrictMode -Version 2.0
-
-Function Install-Sitecore92 (
+Function Install-Sitecore93 (
     [Parameter(Mandatory)] [string] $Prefix, # The Prefix that will be used on SOLR, Website and Database instances.
     [Parameter(Mandatory)] [string] $SitecoreVersion, # i.e. 901XM0, 910XP0, 911XP1, etc.
     [Parameter(Mandatory)] [string] $DownloadBase, # The location where WDPs, ZIPs, license.xml are stored

@@ -33,7 +33,7 @@ Try {
                       -SqlAdminUser sa `
                       -SqlAdminPassword $SqlAdminPassword `
                       -DoInstallPrerequisites `
-                      -Packages @("Sitecore.PowerShell.Extensions-5.1.zip") `
+                      -Packages @("Sitecore.PowerShell.Extensions-6.0.zip") `
                       -DoSitecorePublish
                       #-DoRebuildLinkDatabases `
                       #-DoRebuildSearchIndexes `

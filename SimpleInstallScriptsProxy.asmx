@@ -119,7 +119,6 @@ public class SimpleInstallScriptsProxy : WebService
         }  
     }
 
-    [UsedImplicitly]
     private void RebuildLinkDatabaseInternal(string databaseName)
     {
         var database = Factory.GetDatabase(databaseName);

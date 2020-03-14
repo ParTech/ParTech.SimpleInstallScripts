@@ -9,7 +9,7 @@ Function Install-Sitecore91 (
     [Parameter(Mandatory)] [string] $SqlAdminPassword, # The password for $SQLAdminUser.
     [string] $SitecoreAdminPassword, # The Password for the Sitecore Admin User. This will be regenerated if left on the default.
     [string] $DriveLetter = "C", # The desired drive to install Sitecore on, and download assets
-    [string] $SolrHost = "solr", # The hostname of the Solr server
+    [string] $SolrHost = "localhost", # The hostname of the Solr server
     [string] $SolrPort = "8983", # The port of the Solr server
     [Hashtable] $Parameters = @{}, # Parameters for Install-SitecoreConfiguration
     [string[]] $Packages = @(), # Packages to install

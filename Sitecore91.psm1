@@ -117,6 +117,8 @@ Function Install-Sitecore91 (
             Uninstall-SitecoreConfiguration @SitecoreParams *>&1 | Tee-Object "$($Prefix)-Uninstall.log"
         } else {
             Write-Host "================= Installing $Prefix =================" -foregroundcolor Yellow
+			Get-Date -DisplayHint Time
+			
             Install-SitecoreConfiguration @SitecoreParams *>&1 | Tee-Object "$($Prefix).log"
 
             If ($Parameters.Topology -eq "XM0") {
@@ -126,6 +128,7 @@ Function Install-Sitecore91 (
             }
 
             # Tests if the homepage loads
+			Get-Date -DisplayHint Time
             Test-Site $Parameters.SitecoreUrl
 
             # Installs the .asmx agent to the Content Management / Standalone instance
@@ -136,6 +139,8 @@ Function Install-Sitecore91 (
             # Installs .zip and .update packages, such as Sitecore PowerShell Extensions-5.1.zip
             foreach ($PackageName in $Packages) {
                 Write-Host "================= Installing Package $PackageName =================" -foregroundcolor Magenta
+				Get-Date -DisplayHint Time
+				
                 $PackagesUrl = "$DownloadBase/$PackageName"
                 $PackagesZip = "$($Parameters.InstallRoot)\$PackageName"
                 Invoke-DownloadIfNeeded $PackagesUrl $PackagesZip
@@ -145,6 +150,8 @@ Function Install-Sitecore91 (
             # Executes a Smart Publish
             if ($DoSitecorePublish) {
                 Write-Host "================= Publishing master to web =================" -foregroundcolor Magenta
+				Get-Date -DisplayHint Time
+				
                 $proxy.SmartPublish('master', 'web')
                 Invoke-WaitForJobsToFinish "Smart Publish" $proxy
             }
@@ -152,6 +159,7 @@ Function Install-Sitecore91 (
             # Rebuilds the Core and Master Link databases. Shame this isn't done by Sitecore!
             if ($DoRebuildLinkDatabases) {
                 Write-Host "================= Rebuilding Link Databases =================" -foregroundcolor Magenta
+				Get-Date -DisplayHint Time
 
                 Write-Host "Rebuilding Core Link Database" -ForegroundColor Yellow
                 $proxy.RebuildLinkDatabase("core")
@@ -166,6 +174,8 @@ Function Install-Sitecore91 (
             # TODO: Loop through and rebuild *all* indexes
             if ($DoRebuildSearchIndexes) {
                 Write-Host "================= Rebuilding Search Databases =================" -foregroundcolor Magenta
+				Get-Date -DisplayHint Time
+				
                 Write-Host "Rebuilding Core Search Index" -ForegroundColor Yellow
                 $proxy.RebuildSearchIndex("sitecore_core_index")
 
@@ -185,6 +195,8 @@ Function Install-Sitecore91 (
                 # Deploys the Marketing Definitions. This can take a *long* time. Again, would be nice if they were pre-deployed by Sitecore.
                 if ($DoDeployMarketingDefinitions) {
                     Write-Host "================= Deploying Marketing Definitions =================" -foregroundcolor Magenta
+					Get-Date -DisplayHint Time
+					
                     $proxyXP.DeployMarketingDefinitions()
                     Invoke-WaitForJobsToFinish "Deploying Marketing Definitions" $proxy
                 }
